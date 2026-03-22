@@ -1,0 +1,5 @@
+google-cloud-vision
+pdf2image
+pillow
+pandas
+numpy

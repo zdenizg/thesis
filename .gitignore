@@ -1,0 +1,15 @@
+*.csv
+*.pdf
+*.zip
+*.xlsx
+*.parquet
+__pycache__/
+.venv/
+.env
+*.pyc
+.DS_Store
+.claude/
+OCR/ocr_missing_output_google/
+google_credentials.json
+*.numbers
+node_modules/
