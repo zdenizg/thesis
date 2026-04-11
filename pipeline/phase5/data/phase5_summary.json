@@ -1,12 +1,12 @@
 {
   "total_input_pages": 83568,
-  "total_retained": 77982,
-  "total_excluded": 5586,
+  "total_retained": 78022,
+  "total_excluded": 5546,
   "exclusion_count_per_criterion": {
-    "sparse": 3742,
+    "sparse": 3543,
     "low_content": 4134,
     "cover": 2617,
     "non_english": 741
   },
-  "multi_flag_pages": 3832
+  "multi_flag_pages": 3733
 }

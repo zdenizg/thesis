@@ -1,5 +1,24 @@
+# Thesis pipeline dependencies
+# Pinned to versions verified working as of 2026-04-11.
+# Run `python pipeline/setup_nltk.py` once after install to fetch NLTK corpora.
+
+# --- Preprocessing pipeline (pipeline/phase1 - phase6) ---
+pandas==3.0.1
+numpy==2.4.3
+tqdm==4.67.3
+nltk==3.9.3
+
+# --- OCR preprocessing (outside pipeline/) ---
+# These dependencies are only needed to re-run the one-shot OCR scripts under
+# OCR/ (ocr_missing_google.py, categorize_55_missing.py). The pipeline itself
+# does not import them — OCR has already produced its output and the merged
+# CSV is what phase 1 reads. Pinned to versions installed at last successful
+# OCR run; google-cloud-vision and google-auth are intentionally left
+# unpinned because they are not currently installed in the active env and
+# pinning unverified versions would be misleading.
 google-cloud-vision
-pdf2image
-pillow
-pandas
-numpy
+google-auth
+pdf2image==1.17.0
+pillow==12.1.1
+python-dotenv==1.2.2
+groq==1.0.0

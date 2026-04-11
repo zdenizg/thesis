@@ -3,8 +3,11 @@
 import pandas as pd
 from pathlib import Path
 
-INPUT_PATH  = Path("/Users/denizguvenol/Desktop/thesis/cleaning/phase 1 /JFK_Pages_Merged.csv")
-OUTPUT_PATH = Path("/Users/denizguvenol/Desktop/thesis/cleaning/phase 1 /data/pages_phase1_structural.csv")
+_SCRIPT_DIR = Path(__file__).resolve().parent
+_PHASE_DIR  = _SCRIPT_DIR.parent
+
+INPUT_PATH  = _PHASE_DIR / "JFK_Pages_Merged.csv"
+OUTPUT_PATH = _PHASE_DIR / "data" / "pages_phase1_structural.csv"
 
 REQUIRED_COLS = [
     "id", "file_id", "filename", "page_number", "word_count", "char_count",

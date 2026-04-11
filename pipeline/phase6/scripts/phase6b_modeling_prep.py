@@ -1,39 +1,61 @@
 """
-Phase 6b: Modeling Preparation
-Strips residual archive tokens, chunks long documents, drops short ones.
-Input : phase6/data/documents_for_modeling.csv
+Phase 6B — Modeling Preparation
+================================
+Input:  phase6/data/documents_for_modeling.csv
 Output: phase6/data/documents_final.csv
+
+Three-step post-processing:
+  1. Strip residual archive tokens and metadata phrases
+  2. Chunk documents over CHUNK_SIZE tokens into numbered sub-documents
+  3. Drop documents with fewer than MIN_DOC_TOKENS tokens
+
+Dependencies: pandas, tqdm, re, pathlib
 """
 
 import re
-import random
 from pathlib import Path
 
 import pandas as pd
+from tqdm import tqdm
 
-random.seed(42)
+# ---------------------------------------------------------------------------
+# Paths
+# ---------------------------------------------------------------------------
+SCRIPT_DIR = Path(__file__).resolve().parent
+PHASE6_DIR = SCRIPT_DIR.parent
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
-BASE        = Path(__file__).resolve().parents[1]
-INPUT_PATH  = BASE / "data" / "documents_for_modeling.csv"
-OUTPUT_PATH = BASE / "data" / "documents_final.csv"
+INPUT_CSV = PHASE6_DIR / "data" / "documents_for_modeling.csv"
+OUTPUT_CSV = PHASE6_DIR / "data" / "documents_final.csv"
 
-# ── Step 1a — Token-level blacklist ───────────────────────────────────────────
+SEPARATOR = "=" * 60
+REQUIRED_COLUMNS = {
+    "file_id",
+    "document_text",
+    "document_text_lemma",
+    "token_count",
+    "token_count_lemma",
+}
+
+# ---------------------------------------------------------------------------
+# Thresholds
+# ---------------------------------------------------------------------------
+CHUNK_SIZE = 5_000
+MIN_DOC_TOKENS = 50
+
+# ---------------------------------------------------------------------------
+# Step 1a — Token-level blacklist
+# ---------------------------------------------------------------------------
 ARCHIVE_TOKEN_BLACKLIST = {
     'umbra', 'noforn', 'orcon', 'wnintel', 'moray', 'tud',
     'decl', 'drv', 'css', 'originator', 'ernment',
     'fpmr', 'cfr', 'sgswirl', 'hcf', 'limdis',
     'rybat', 'exdis', 'nodis', 'typic', 'slugs',
     'docid', 'nw', 'iden', 'mhfno', 'sensind',
-    'cite', 'ref', 'per', 'via',
 }
 
-def _apply_token_blacklist(text: str) -> str:
-    if not isinstance(text, str) or not text:
-        return ""
-    return " ".join(t for t in text.split() if t.lower() not in ARCHIVE_TOKEN_BLACKLIST)
-
-# ── Step 1b — Phrase-level stripping ─────────────────────────────────────────
+# ---------------------------------------------------------------------------
+# Step 1b — Phrase-level stripping
+# ---------------------------------------------------------------------------
 _META_PHRASES = [
     "doc id",
     "jfk assassination system identification",
@@ -58,96 +80,181 @@ _META_RE = re.compile(
     re.IGNORECASE,
 )
 
+
+# ---------------------------------------------------------------------------
+# Text-cleaning functions
+# ---------------------------------------------------------------------------
+
+def _apply_token_blacklist(text: str) -> str:
+    """Remove blacklisted archive tokens from whitespace-delimited text."""
+    if not isinstance(text, str) or not text:
+        return ""
+    return " ".join(t for t in text.split() if t.lower() not in ARCHIVE_TOKEN_BLACKLIST)
+
+
 def _strip_phrases(text: str) -> str:
+    """Remove configured metadata phrases and normalize extra spaces."""
     if not isinstance(text, str):
         return ""
     cleaned = _META_RE.sub(" ", text)
     return re.sub(r" {2,}", " ", cleaned).strip()
 
+
 def clean_text(text: str) -> str:
+    """Apply token-level and phrase-level cleanup to a document text."""
     return _strip_phrases(_apply_token_blacklist(text))
 
-# ── Load ──────────────────────────────────────────────────────────────────────
-print("Loading Phase 6 data …")
-df = pd.read_csv(INPUT_PATH, low_memory=False)
-docs_before_chunking = len(df)
-print(f"  Loaded {docs_before_chunking:,} documents")
 
-# ── Step 1 — Strip ────────────────────────────────────────────────────────────
-print("Stripping archive tokens and phrases …")
-df["document_text"]       = df["document_text"].apply(clean_text)
-df["document_text_lemma"] = df["document_text_lemma"].apply(clean_text)
-df["token_count"]         = df["document_text"].str.split().str.len().fillna(0).astype(int)
-df["token_count_lemma"]   = df["document_text_lemma"].str.split().str.len().fillna(0).astype(int)
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
 
-# ── Step 2 — Chunk documents over 5,000 tokens ───────────────────────────────
-CHUNK_SIZE = 5_000
+def print_section(title: str) -> None:
+    """Print a consistently formatted section header."""
+    print(f"\n{title}")
 
-print("Chunking long documents …")
-rows = []
 
-for _, row in df.iterrows():
-    tokens     = row["document_text"].split() if isinstance(row["document_text"], str) else []
-    tokens_lem = row["document_text_lemma"].split() if isinstance(row["document_text_lemma"], str) else []
+def validate_columns(df: pd.DataFrame, required: set[str], name: str) -> None:
+    """Raise a clear error if required columns are missing."""
+    missing = sorted(required - set(df.columns))
+    if missing:
+        raise ValueError(f"{name} is missing required columns: {', '.join(missing)}")
 
-    if len(tokens) <= CHUNK_SIZE:
-        rows.append(row.to_dict())
-        continue
 
-    n_chunks = (len(tokens) + CHUNK_SIZE - 1) // CHUNK_SIZE
-    for i in range(n_chunks):
-        chunk_tok = tokens[i * CHUNK_SIZE : (i + 1) * CHUNK_SIZE]
-        chunk_lem = tokens_lem[i * CHUNK_SIZE : (i + 1) * CHUNK_SIZE]
-        new_row = row.to_dict()
-        new_row["file_id"]             = f"{row['file_id']}_chunk_{i+1:03d}"
-        new_row["document_text"]       = " ".join(chunk_tok)
-        new_row["document_text_lemma"] = " ".join(chunk_lem)
-        new_row["token_count"]         = len(chunk_tok)
-        new_row["token_count_lemma"]   = len(chunk_lem)
-        rows.append(new_row)
+# ---------------------------------------------------------------------------
+# Pipeline steps
+# ---------------------------------------------------------------------------
 
-df_chunked = pd.DataFrame(rows)
-docs_after_chunking = len(df_chunked)
+def load_data() -> pd.DataFrame:
+    print_section("Loading data...")
+    if not INPUT_CSV.exists():
+        raise FileNotFoundError(f"Input file not found: {INPUT_CSV}")
+    df = pd.read_csv(INPUT_CSV, low_memory=False)
+    validate_columns(df, REQUIRED_COLUMNS, INPUT_CSV.name)
+    print(f"  Input:  {INPUT_CSV.name:<35} {len(df):,} documents")
+    return df
 
-# ── Step 3 — Drop documents with fewer than 50 tokens ────────────────────────
-df_final     = df_chunked[df_chunked["token_count"] >= 50].copy()
-docs_dropped = docs_after_chunking - len(df_final)
 
-# ── Save ──────────────────────────────────────────────────────────────────────
-df_final.to_csv(OUTPUT_PATH, index=False)
+def strip_archive_residue(df: pd.DataFrame) -> pd.DataFrame:
+    print_section("Stripping archive tokens and phrases...")
+    tqdm.pandas(desc="Cleaning text")
+    df["document_text"] = df["document_text"].progress_apply(clean_text)
+    tqdm.pandas(desc="Cleaning lemma text")
+    df["document_text_lemma"] = df["document_text_lemma"].progress_apply(clean_text)
+    df["token_count"] = df["document_text"].str.split().str.len().fillna(0).astype(int)
+    df["token_count_lemma"] = df["document_text_lemma"].str.split().str.len().fillna(0).astype(int)
+    return df
 
-# ── Summary ───────────────────────────────────────────────────────────────────
-tc = df_final["token_count"]
 
-bins = [
-    ("<50",        (tc < 50).sum()),
-    ("50–200",     ((tc >= 50)   & (tc < 200)).sum()),
-    ("200–500",    ((tc >= 200)  & (tc < 500)).sum()),
-    ("500–1000",   ((tc >= 500)  & (tc < 1000)).sum()),
-    ("1000–5000",  ((tc >= 1000) & (tc <= 5000)).sum()),
-    ("5000+",      (tc > 5000).sum()),
-]
+def chunk_long_documents(df: pd.DataFrame) -> pd.DataFrame:
+    print_section("Chunking long documents...")
+    if df.empty:
+        return df.copy()
 
-print("\n" + "=" * 60)
-print("PHASE 6b MODELING PREP SUMMARY")
-print("=" * 60)
-print(f"Documents before chunking  : {docs_before_chunking:,}")
-print(f"Documents after  chunking  : {docs_after_chunking:,}")
-print(f"Documents dropped (<50 tok): {docs_dropped:,}")
-print(f"Final document count       : {len(df_final):,}")
-print(f"Max token count            : {tc.max():,}  (should be ≤ 5,000)")
+    n_long = int((df["token_count"] > CHUNK_SIZE).sum())
+    print(f"  Documents over {CHUNK_SIZE:,} tokens: {n_long:,}")
 
-print("\nToken distribution:")
-for label, count in bins:
-    bar = "█" * int(count / len(df_final) * 40) if len(df_final) else ""
-    print(f"  {label:<12} {count:>6,}  {count/len(df_final)*100:>5.1f}%  {bar}")
+    rows = []
+    for _, row in tqdm(df.iterrows(), total=len(df), desc="Chunking", unit="doc"):
+        tokens = row["document_text"].split() if isinstance(row["document_text"], str) else []
+        tokens_lem = row["document_text_lemma"].split() if isinstance(row["document_text_lemma"], str) else []
 
-print("\n5 random document previews:")
-sample = df_final[df_final["token_count"] > 0].sample(min(5, len(df_final)), random_state=42)
-for i, (_, row) in enumerate(sample.iterrows(), 1):
-    preview = str(row["document_text"])[:300]
-    print(f"\n  [{i}] {row['file_id']}  ({row['token_count']:,} tokens)")
-    print(f"      {preview}")
+        if len(tokens) <= CHUNK_SIZE:
+            rows.append(row.to_dict())
+            continue
 
-print(f"\nSaved → {OUTPUT_PATH.relative_to(BASE.parent)}")
-print(f"Rows: {len(df_final):,}  |  Columns: {len(df_final.columns)}")
+        n_chunks = (len(tokens) + CHUNK_SIZE - 1) // CHUNK_SIZE
+        for i in range(n_chunks):
+            chunk_tok = tokens[i * CHUNK_SIZE:(i + 1) * CHUNK_SIZE]
+            chunk_lem = tokens_lem[i * CHUNK_SIZE:(i + 1) * CHUNK_SIZE]
+            new_row = row.to_dict()
+            new_row["file_id"] = f"{row['file_id']}_chunk_{i + 1:03d}"
+            new_row["document_text"] = " ".join(chunk_tok)
+            new_row["document_text_lemma"] = " ".join(chunk_lem)
+            new_row["token_count"] = len(chunk_tok)
+            new_row["token_count_lemma"] = len(chunk_lem)
+            rows.append(new_row)
+
+    return pd.DataFrame(rows, columns=df.columns)
+
+
+def drop_short_documents(df: pd.DataFrame) -> tuple[pd.DataFrame, int, int]:
+    print_section("Dropping short documents...")
+    before = len(df)
+
+    # Drop by raw token count
+    df = df[df["token_count"] >= MIN_DOC_TOKENS].copy()
+    dropped_raw = before - len(df)
+    print(f"  Dropped {dropped_raw:,} documents with raw tokens < {MIN_DOC_TOKENS}")
+
+    # Drop by lemma token count
+    before_lemma = len(df)
+    df = df[df["token_count_lemma"] >= MIN_DOC_TOKENS].copy()
+    dropped_lemma = before_lemma - len(df)
+    print(f"  Dropped {dropped_lemma:,} documents with lemma tokens < {MIN_DOC_TOKENS}")
+
+    return df, dropped_raw, dropped_lemma
+
+
+def save_output(df: pd.DataFrame) -> None:
+    print_section("Saving output...")
+    OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUTPUT_CSV, index=False)
+    print(f"  → {OUTPUT_CSV.relative_to(PHASE6_DIR)}  {len(df):>10,} documents")
+
+
+def print_summary(
+    docs_before: int,
+    docs_after_chunk: int,
+    dropped_raw: int,
+    dropped_lemma: int,
+    df_final: pd.DataFrame,
+) -> None:
+    tc = df_final["token_count"]
+    n_final = len(df_final)
+
+    def fmt_stat(value: float) -> str:
+        if pd.isna(value):
+            return "n/a"
+        return f"{value:>8.1f}"
+
+    def fmt_max(series: pd.Series) -> str:
+        if series.empty:
+            return "n/a"
+        return f"{int(series.max()):>8,}"
+
+    print(f"\n{SEPARATOR}")
+    print("SUMMARY")
+    print(SEPARATOR)
+    print(f"  Documents before chunking   : {docs_before:>8,}")
+    print(f"  Documents after chunking    : {docs_after_chunk:>8,}")
+    print(f"  Dropped (raw tokens < {MIN_DOC_TOKENS})   : {dropped_raw:>8,}")
+    print(f"  Dropped (lemma tokens < {MIN_DOC_TOKENS}) : {dropped_lemma:>8,}")
+    print(f"  Final document count        : {n_final:>8,}")
+    print(f"  Mean tokens per document   : {fmt_stat(tc.mean())}")
+    print(f"  Median tokens per document : {fmt_stat(tc.median())}")
+    print(f"  Max token count            : {fmt_max(tc)}  (limit: {CHUNK_SIZE:,})")
+    print(SEPARATOR)
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    print(SEPARATOR)
+    print("PHASE 6B — Modeling Preparation")
+    print(SEPARATOR)
+
+    df = load_data()
+    docs_before = len(df)
+    df = strip_archive_residue(df)
+    df_chunked = chunk_long_documents(df)
+    docs_after_chunk = len(df_chunked)
+    df_final, dropped_raw, dropped_lemma = drop_short_documents(df_chunked)
+    save_output(df_final)
+    print_summary(docs_before, docs_after_chunk, dropped_raw, dropped_lemma, df_final)
+
+
+if __name__ == "__main__":
+    main()
