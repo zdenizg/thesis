@@ -1,9 +1,9 @@
 import csv
 import sys
 
-MAIN_CSV = '/Users/denizguvenol/Desktop/thesis/cleaning/phase 1 /JFK Pages Rows.csv'
-MISSING_CSV = '/Users/denizguvenol/Desktop/thesis/cleaning/phase 1 /jfk_categorization_55missing.csv'
-OUTPUT_CSV = '/Users/denizguvenol/Desktop/thesis/cleaning/phase 1 /JFK_Pages_Merged.csv'
+MAIN_CSV = '/Users/denizguvenol/Desktop/thesis/pipeline/phase1/JFK Pages Rows.csv'
+MISSING_CSV = '/Users/denizguvenol/Desktop/thesis/pipeline/phase1/jfk_categorization_55missing.csv'
+OUTPUT_CSV = '/Users/denizguvenol/Desktop/thesis/pipeline/phase1/JFK_Pages_Merged.csv'
 
 print("Loading missing CSV into memory...", flush=True)
 
