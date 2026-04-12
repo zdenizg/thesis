@@ -1,0 +1,75 @@
+# Cold War Vocabulary — Source of Truth
+# This YAML file defines the domain-specific terms used for topic
+# interpretability analysis.  Each term carries a one-line source annotation.
+# The human-readable appendix (cold_war_vocabulary.md) is regenerated from
+# this file and should not be edited directly.
+
+geopolitical:
+  - term: cuba
+    source: Primary locus of 1962 missile crisis and DGI operations.
+  - term: soviet
+    source: Adjective form used pervasively in CIA/FBI reporting.
+  - term: russia
+    source: Geographic reference in diplomatic and intelligence cables.
+  - term: mexico
+    source: Oswald's documented visit to Mexico City, Sept–Oct 1963.
+  - term: vietnam
+    source: Concurrent Cold War theatre referenced in policy documents.
+  - term: germany
+    source: Divided state central to Cold War geopolitics.
+  - term: berlin
+    source: Focal point of East–West tension (Wall, airlift, stations).
+
+agency:
+  - term: cia
+    source: Central Intelligence Agency — primary producing agency for JFK files.
+  - term: fbi
+    source: Federal Bureau of Investigation — domestic intelligence and Oswald file.
+  - term: kgb
+    source: Soviet Committee for State Security — foreign counterpart.
+  - term: nsa
+    source: National Security Agency — signals intelligence references.
+  - term: dgi
+    source: Cuban Directorate of Intelligence — Cuban counterpart.
+
+tradecraft:
+  - term: surveillance
+    source: Physical and technical monitoring operations.
+  - term: agent
+    source: Human intelligence asset or officer.
+  - term: source
+    source: Human intelligence provider (distinct from officer).
+  - term: operation
+    source: Planned intelligence activity or covert action.
+  - term: covert
+    source: Modifier for clandestine activities.
+  - term: defector
+    source: Individual who changes allegiance across blocs.
+  - term: handler
+    source: Officer managing a human intelligence source.
+
+diplomatic:
+  - term: embassy
+    source: Diplomatic mission — site of intelligence activity.
+  - term: consulate
+    source: Consular office — Oswald visited Soviet and Cuban consulates.
+  - term: ambassador
+    source: Senior diplomatic representative.
+  - term: defection
+    source: Act of changing allegiance (noun form).
+  - term: asylum
+    source: Political protection sought by defectors.
+  - term: communist
+    source: Ideological descriptor in intelligence reporting.
+  - term: party
+    source: Political party — often Communist Party references.
+
+named_actor:
+  - term: oswald
+    source: Lee Harvey Oswald — central subject of JFK assassination files.
+  - term: ruby
+    source: Jack Ruby — killed Oswald; subject of extensive investigation.
+  - term: castro
+    source: Fidel Castro — Cuban leader; subject of CIA operations.
+  - term: khrushchev
+    source: Nikita Khrushchev — Soviet premier during key Cold War events.

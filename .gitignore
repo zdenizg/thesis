@@ -13,3 +13,4 @@ OCR/ocr_missing_output_google/
 google_credentials.json
 *.numbers
 node_modules/
+lda/outputs/
