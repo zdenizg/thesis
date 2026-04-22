@@ -11,15 +11,15 @@ re-running all affected experiments.
 
 | Parameter | Value | Notes |
 |---|---|---|
-| `alpha` | `'auto'` | Asymmetric, learned from data by Gensim |
+| `alpha` | `'auto'` | Asymmetric, learned from data by Gensim [^1] |
 | `eta` | `'auto'` | Symmetric, learned from data by Gensim |
 | `passes` | `10` | Full passes over the corpus |
 | `iterations` | `400` | Maximum E-step iterations per chunk |
 | `chunksize` | `2000` | Documents per training chunk |
+| `update_every` | `3` | M-step after every 3 chunks; matches the schedule LdaMulticore(workers=3, chunksize=2000) would have used |
 | `minimum_probability` | `0.01` | Suppress topic weights below this threshold |
 | `eval_every` | `None` | Disable in-training perplexity (speed) |
 | `random_state` | `42` | Fixed seed for reproducibility |
-| `workers` | `3` | Parallel workers for `LdaMulticore` |
 
 ## Dictionary filtering
 
@@ -36,3 +36,7 @@ coherence optimum are inspected qualitatively for gross topic instability
 (e.g., near-duplicate or degenerate topics).  Formal multi-seed stability
 analysis (training the same *k* with multiple seeds and measuring topic
 alignment across runs) is out of scope for this thesis.
+
+[^1]: `alpha='auto'` requires `gensim.models.LdaModel` rather than
+`LdaMulticore` in Gensim 4.4.0; see `lda_params_decision_record.md` for
+the decision rationale.
