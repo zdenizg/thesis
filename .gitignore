@@ -14,3 +14,4 @@ google_credentials.json
 *.numbers
 node_modules/
 lda/outputs/
+!lda/reports/*.csv
