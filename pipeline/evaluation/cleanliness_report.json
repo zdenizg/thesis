@@ -1,0 +1,60 @@
+{
+  "dictionary_source": "/usr/share/dict/words",
+  "dictionary_size": 234456,
+  "stages": {
+    "stage0_raw": {
+      "dict_hit_rate": 0.7758335064383423,
+      "type_token_ratio": 0.7309677505479525,
+      "hapax_ratio": 0.8270468778653688,
+      "alpha_char_ratio": 0.7287038312973888,
+      "mean_token_len": 5.069502963184883,
+      "n_units": 83621,
+      "unit": "page"
+    },
+    "stage2": {
+      "dict_hit_rate": 0.7778323302920913,
+      "type_token_ratio": 0.6999705480067931,
+      "hapax_ratio": 0.804713865738911,
+      "alpha_char_ratio": 0.7816599345841434,
+      "mean_token_len": 5.262799774907783,
+      "n_units": 83568,
+      "unit": "page"
+    },
+    "stage3": {
+      "dict_hit_rate": 0.7764441085921205,
+      "type_token_ratio": 0.6959141517067993,
+      "hapax_ratio": 0.7995388390545378,
+      "alpha_char_ratio": 0.7908629475926953,
+      "mean_token_len": 5.329263427135176,
+      "n_units": 83568,
+      "unit": "page"
+    },
+    "stage4": {
+      "dict_hit_rate": 0.740329466048721,
+      "type_token_ratio": 0.7857965207680206,
+      "hapax_ratio": 0.8290121771734702,
+      "alpha_char_ratio": 0.8541512000412931,
+      "mean_token_len": 6.410865363695333,
+      "n_units": 83568,
+      "unit": "page"
+    },
+    "stage5": {
+      "dict_hit_rate": 0.7535485457650457,
+      "type_token_ratio": 0.7809415967050173,
+      "hapax_ratio": 0.8272714581941639,
+      "alpha_char_ratio": 0.8597819998050982,
+      "mean_token_len": 6.496625931451198,
+      "n_units": 78023,
+      "unit": "page"
+    },
+    "stage6b": {
+      "dict_hit_rate": 0.7419167604383192,
+      "type_token_ratio": 0.5331441955082409,
+      "hapax_ratio": 0.6845405413273624,
+      "alpha_char_ratio": 0.8579335199020887,
+      "mean_token_len": 6.4401067949154305,
+      "n_units": 4049,
+      "unit": "doc"
+    }
+  }
+}

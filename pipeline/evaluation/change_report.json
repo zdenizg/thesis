@@ -1,0 +1,72 @@
+{
+  "columns_used": {
+    "phase1": "content",
+    "phase2": "content_clean_ocr",
+    "phase3": "content_clean_lines",
+    "phase4": "content_model_lemma",
+    "phase5": "content_model_lemma",
+    "phase6": "document_text_lemma"
+  },
+  "transitions": {
+    "raw_to_phase2": {
+      "n_matched": 83568,
+      "pct_word_change_mean": -0.12337033537566358,
+      "pct_word_change_std": 0.11233775649577778,
+      "pct_char_change_mean": -0.08873587701741371,
+      "pct_char_change_std": 0.10056462576139864,
+      "jaccard_words_mean": 0.9725710243409795,
+      "jaccard_words_std": 0.05186321238806555,
+      "n_before": 83621,
+      "n_after": 83568,
+      "n_dropped": 53
+    },
+    "phase2_to_phase3": {
+      "n_matched": 83568,
+      "pct_word_change_mean": -0.04987952228308515,
+      "pct_word_change_std": 0.08940848631414205,
+      "pct_char_change_mean": -0.038233868767175036,
+      "pct_char_change_std": 0.07704879210050614,
+      "jaccard_words_mean": 0.9632359469663477,
+      "jaccard_words_std": 0.06964810419683849,
+      "n_before": 83568,
+      "n_after": 83568,
+      "n_dropped": 0
+    },
+    "phase3_to_phase4": {
+      "n_matched": 83568,
+      "pct_word_change_mean": -0.40304758339153046,
+      "pct_word_change_std": 0.12537491702040718,
+      "pct_char_change_mean": -0.3183825167084711,
+      "pct_char_change_std": 0.09820519399817713,
+      "jaccard_words_mean": 0.6327691924017639,
+      "jaccard_words_std": 0.10629990095029027,
+      "n_before": 83568,
+      "n_after": 83568,
+      "n_dropped": 0
+    },
+    "phase4_to_phase5": {
+      "n_matched": 78023,
+      "pct_word_change_mean": 0.0,
+      "pct_word_change_std": 0.0,
+      "pct_char_change_mean": 0.0,
+      "pct_char_change_std": 0.0,
+      "jaccard_words_mean": 1.0,
+      "jaccard_words_std": 0.0,
+      "n_before": 83568,
+      "n_after": 78023,
+      "n_dropped": 5545
+    },
+    "phase5_to_phase6b": {
+      "n_matched": 2506,
+      "pct_word_change_mean": -0.01460115049749291,
+      "pct_word_change_std": 0.02406262124999175,
+      "pct_char_change_mean": -0.014942609251897039,
+      "pct_char_change_std": 0.024998803054301147,
+      "jaccard_words_mean": 0.98604238506136,
+      "jaccard_words_std": 0.021540146609878096,
+      "n_before": 2560,
+      "n_after": 2506,
+      "n_dropped": 54
+    }
+  }
+}
