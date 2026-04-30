@@ -1,0 +1,2 @@
+k,coherence_c_v,log_perplexity,alpha_min,alpha_max,alpha_mean,eta,train_seconds,coherence_seconds
+25,0.563877,-8.1495,0.00874,0.036498,0.02167,0.105665,53.9,66.2

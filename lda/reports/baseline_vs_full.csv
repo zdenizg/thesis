@@ -1,0 +1,4 @@
+metric,full_pipeline,baseline,delta
+c_v_coherence_k25,0.612817,0.563877,0.04894
+metadata_blacklist_hits_top20,0.0,13.0,-13.0
+noise_topics_top10_ge3,0.0,0.0,0.0
