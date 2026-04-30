@@ -85,7 +85,7 @@ ARCHIVE_STOPWORDS = {
     "page", "division", "station", "office", "memo", "cable",
     "information", "attached",
     # Frequent administrative tokens with low topical value
-    "mr", "mr.", "date", "number", "section",
+    "mr", "mr.", "dr.", "jr.", "mrs.", "sr.", "date", "number", "section",
     # High-frequency generic tokens with no topical signal
     "would", "may", "one", "also", "use", "made", "new",
     # Memo field header — n=42,891, dominates as header not narrative
@@ -100,6 +100,8 @@ ARCHIVE_STOPWORDS = {
     "que",
     # Possessive marker produced by Penn Treebank tokenizer
     "'s",
+    # Contraction suffix produced by Penn Treebank tokenizer
+    "n't",
 }
 
 ALL_STOPWORDS = ENGLISH_STOPWORDS | ARCHIVE_STOPWORDS
@@ -114,17 +116,20 @@ COLD_WAR_ANCHORS = [
 # Token filter
 # ---------------------------------------------------------------------------
 PUNCT_RE = re.compile(r'^[^\w]+$')
+INITIAL_RE = re.compile(r'^[a-z]\.$')
 
 _lemmatizer = WordNetLemmatizer()
 
 
 def is_valid_token(token: str) -> bool:
-    """Return True if token should be kept (>= 2 chars, no digits, not pure punct)."""
+    """Return True if token should be kept (>= 2 chars, no digits, not pure punct, not a name initial)."""
     if len(token) < 2:
         return False
     if any(ch.isdigit() for ch in token):
         return False
     if PUNCT_RE.match(token):
+        return False
+    if INITIAL_RE.match(token):
         return False
     return True
 
