@@ -1,0 +1,82 @@
+# Known Entities — Noise-Check Allowlist
+# Proper nouns, acronyms, places, and common abbreviations that routinely
+# appear in JFK-era documents but are absent from /usr/share/dict/words.
+# Consulted by lda/scripts/04_inspect_topics.py to avoid false-positive
+# noise flags on legitimate archive vocabulary.
+#
+# All entries are lowercased — the noise checker compares against the
+# lowercased top-word from the LDA model.
+
+persons:
+  - nosenko
+  - oswald
+  - kennedy
+  - sullivan
+  - belmont
+  - levison
+  - loginov
+  - hampton
+  - tichborn
+  - wiley
+  - riha
+  - jaffe
+  - bosch
+  - ferrie
+  - garrison
+  - maheu
+  - benadum
+  - rothman
+  - rankin
+  - ruby
+  - castro
+  - khrushchev
+  - bissell
+  - mccone
+  - fidel
+
+organizations:
+  - sclc
+  - bpp
+  - arrb
+  - hsca
+  - ssc
+  - ncfe
+  - rfe
+  - igrs
+  - irs
+  - jmwave
+  - dgi
+  - nsa
+  - kgb
+  - fbi
+  - cia
+
+places:
+  - ussr
+  - chicago
+  - detroit
+  - caracas
+  - havana
+  - haiti
+  - europe
+  - venezuela
+  - orleans
+
+abbreviations:
+  - "u.s."
+  - "dr."
+  - "jr."
+  - "mrs."
+  - "sr."
+  - "j."
+  - "w."
+  - "p."
+  - "s."
+  - "u."
+  - "q."
+  - "c."
+  - "g."
+  - "n't"
+  - pp
+  - ad
+  - sa
