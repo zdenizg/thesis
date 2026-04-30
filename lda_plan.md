@@ -4,6 +4,18 @@
 
 The main research question asks to what extent thematic patterns in the 2025 JFK declassified files reflect Cold War intelligence concerns, as identified through topic modelling. Subquestion 1 asks which latent themes emerge and how interpretable they are. Subquestion 2 asks to what extent these themes correspond to Cold War concerns. The modelling work must therefore produce: (a) a defensible final topic model, (b) evidence that the preprocessing pipeline meaningfully improved topic quality over a minimal baseline, (c) empirical justification for the 5,000-token chunking threshold, and (d) a transparent, replicable first-pass indicator of Cold War relevance that structures, but does not replace, manual topic interpretation.
 
+### Connection to broader thesis research questions
+
+The LDA track feeds into the joint thesis RQs defined with Furkan Demir:
+- RQ1 (BERTopic vs LDA): LDA results serve as the classical baseline
+  that BERTopic is compared against.
+- RQ2 (preprocessing contribution): Stage 4 baseline comparison answers
+  this directly for the LDA track.
+- RQ3 (thematic structure): topic labels and Cold War relevance scores
+  answer this.
+- RQ4 (retrieval vs structural view): LDA topics are one of the
+  structural views compared against RAG retrieval.
+
 ## Relationship between `pipeline/` and `lda/`
 
 The pipeline is frozen in its current state and produces the canonical 4,049-document corpus that the methodology describes. Modelling experiments live under `lda/` and read frozen pipeline outputs as input. Where sensitivity analyses require rerunning parts of the pipeline under alternate settings (different chunk sizes, different stopword list), those reruns happen inside `lda/scripts/` using isolated output directories; they do not modify files under `pipeline/`. The pipeline is only edited if a sensitivity result demonstrates that a preprocessing choice was wrong, in which case the change is committed separately with an updated methodology. This separation keeps the canonical corpus reproducible and keeps experiments traceable.

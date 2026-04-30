@@ -4,10 +4,10 @@
 
 | Rank | k | c_v | log_perplexity |
 |---|---|---|---|
-| 1 | 35 | 0.5939 | -8.1115 |
-| 2 | 20 | 0.5913 | -8.1596 |
-| 3 | 25 | 0.5888 | -8.1218 |
+| 1 | 15 | 0.6261 | -8.2025 |
+| 2 | 25 | 0.6128 | -8.1467 |
+| 3 | 30 | 0.6064 | -8.1156 |
 
 ## Recommendation
 
-Fine sweep recommended over k ∈ [15, 40] in steps of 1 or 2.
+Fine sweep recommended over k ∈ [10, 35] in steps of 1 or 2.

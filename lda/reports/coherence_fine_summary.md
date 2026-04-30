@@ -6,14 +6,14 @@ Range swept: k ∈ [18, 40] at unit resolution.
 
 | Rank | k | c_v | log_perplexity |
 |---|---|---|---|
-| 1 | 23 | 0.6115 | -8.1288 |
-| 2 | 21 | 0.6111 | -8.1518 |
-| 3 | 24 | 0.6110 | -8.1293 |
+| 1 | 29 | 0.6188 | -8.1176 |
+| 2 | 25 | 0.6128 | -8.1467 |
+| 3 | 28 | 0.6099 | -8.1287 |
 
 ## Final-k recommendation
 
-Primary signal: c_v coherence.  Top c_v = 0.6115 at k = 23.  Tie-breaking rule: candidates within 0.02 c_v of the maximum are adjudicated by the interpretability rubric applied in script 04.
+Primary signal: c_v coherence.  Top c_v = 0.6188 at k = 29.  Tie-breaking rule: candidates within 0.02 c_v of the maximum are adjudicated by the interpretability rubric applied in script 04.
 
-Candidates within the 0.02 c_v band: k ∈ {23, 21, 24, 22, 33, 38, 39, 19, 35}.
+Candidates within the 0.02 c_v band: k ∈ {29, 25, 28, 18, 27, 19, 31, 30, 26, 20, 21, 32}.
 
 Inspect in script 04: top-20 words per topic, three representative documents per topic, and distinctiveness between candidates before confirming the final k.

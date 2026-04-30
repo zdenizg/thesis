@@ -106,12 +106,12 @@ Maintained by Deniz. Update or tick off as items are resolved.
 - **Revisit:** during Stage 2 write-up.
 
 ### 11. Borderline blacklist terms in Phase 6B
-- **Status:** no separate experiment planned.
+- **Status:** ✓ RESOLVED. At k=25: `originator`, `docid`, `decl`, `cfr` confirmed absent from all topic top-words — blacklisting correct. Topic 22 is the metadata-residue topic from `ref`, `cite`, `per` removal. Decision made in item #29: accept and report.
 - **Why noted:** ChatGPT flagged `originator`, `docid`, `decl`, `cfr` as
   borderline. If they were wrongly blacklisted, related
   document-routing themes may look weird in the full-pipeline topics.
   Check during normal topic inspection in Stage 2.
-- **Revisit:** during Stage 2 topic inspection (`04_inspect_topics.py`).
+- **Revisit:** resolved.
 
 ### 12. `log_perplexity` interpretation
 - **Status:** computed by `02_coherence_sweep_broad.py` but reported
@@ -212,9 +212,63 @@ suggest things that contradict already-committed choices.
 - **Revisit:** Stage 6. Merges with item #6.
 
 ### 24. Fine-sweep results and k-selection candidates
-- **Status:** fine sweep complete. Top 3: k=23 (0.6115), k=21 (0.6111), k=24 (0.6110).
+- **Status:** ✓ RESOLVED. After Phase 4 stopword fix, fine sweep rerun produced new top 3: k=29 (0.6188), k=25 (0.6128), k=28 (0.6099). Broad sweep showed k=15 (0.6261) as highest overall. Script 04 inspection of k=15, k=25, k=29 followed by independent ChatGPT consultation: k=15 rejected (underfits — merges tax forms with assassination discussion), k=29 rejected (overfits — fragments Black Panthers and metadata topics), k=25 selected as final model. Coherence difference between k=25 and k=29 is only 0.006; k=25 has cleaner topic separation.
 - **Why noted:** these three are within 0.0005 c_v — effectively tied. Script 04 will inspect k=23, k=21, and k=33 (secondary peak). Final k chosen by interpretability rubric adjudication.
-- **Revisit:** after script 04 completes.
+- **Revisit:** resolved. Final k = 25.
+
+### 25. Script 04: check topic top-20 words for OCR noise
+- **Status:** ✓ RESOLVED. After Phase 4 stopword fix and noise checker improvement (6-criterion allowlist with known_entities.yml), k=25 inspection shows 1.60% flagged noise rate (8 words out of 500), of which real OCR noise is only 2 tokens (`lifeat`, `gerende`). Pipeline confirmed clean.
+- **Why noted:** the pipeline's functional cleanliness is only confirmed if no OCR garbage appears in topic top-words. If garbled tokens show up, add a spell-correction or dictionary-filtering step between Phase 3 and Phase 4, then rerun everything.
+- **Revisit:** resolved by k=23 inspection; no further action needed.
+
+### 26. dict_hit_rate drop across pipeline (0.776 → 0.742)
+- **Status:** observed in cleanliness_report.py output. Explained by stopword removal reducing the proportion of common English words.
+- **Why noted:** an examiner could ask why dictionary hit rate went down after cleaning. The answer (stopwords are real English words; domain terms like oswald, cia, kgb are not in /usr/share/dict/words) should appear in the methodology when the evaluation results are written up.
+- **Revisit:** Stage 6 writeup, alongside the Zimmermann et al. citation.
+
+### 27. Add `n't` to ARCHIVE_STOPWORDS in Phase 4
+- **Status:** ✓ RESOLVED. Added `n't`, `dr.`, `jr.`, `mrs.`, `sr.` to
+  ARCHIVE_STOPWORDS. Also added a regex filter rejecting single-letter-
+  period tokens (^[a-z]\.$) to catch name initials (j., w., p., etc.).
+  Pipeline rerun from Phase 4 completed. New corpus: 4,010 docs, 54,025
+  vocab. New coherence winner shifted from k=23 to k=25.
+- **Why noted:** not OCR noise, but a tokenisation artefact with zero topical value. Adding it to ARCHIVE_STOPWORDS would require rerunning Phase 4 onward + rebuilding dictionary + retraining all LDA models.
+- **Revisit:** resolved; follow-on numbers work tracked in item #30.
+
+### 28. Spanish-language topic (Topic 2 at k=23)
+- **Status:** confirmed at k=25 as Topic 4. Entirely Spanish function words. Stable across all candidate k values tested (15, 25, 29). Will be reported in Results as a corpus feature.
+- **Why noted:** the non-English Phase 5 filter (5% non-ASCII) misses Spanish written in ASCII. This topic is a real feature of the corpus, not a pipeline failure. Report it honestly in Results as evidence of the filter's acknowledged limitation.
+- **Revisit:** Stage 6 writeup only.
+
+### 29. Topic 13 cable-routing metadata residue
+- **Status:** confirmed at k=25 as Topic 22 (info, message, ref, city, unit, reproduction, per, issuing, letter, press). Metadata-residue topic appears at every k tested. Decision: option (b) — keep terms off blacklist, accept one metadata topic, report it. One admin topic out of 25 is expected and defensible.
+- **Why noted:** `ref`, `cite`, `per` were deliberately removed from the Phase 6B blacklist because they carry topical content in some contexts. Topic 13 shows they also carry routing-metadata signal. Two options: (a) re-add them to the blacklist and accept losing some topical uses, or (b) keep them off the blacklist and accept one metadata-residue topic. Option (b) is defensible — one administrative topic out of 23 is expected.
+- **Revisit:** resolved. Report in Results chapter.
+
+### 30. Post-stopword-fix corpus numbers differ from methodology text
+- **Status:** pending. Methodology currently cites 4,049 docs, 54,058
+  vocab, 78,022 retained pages, median retention 55.4%, k=23. After the
+  Phase 4 stopword fix, the correct numbers are: 4,010 docs, 54,025
+  vocab, 78,012 retained pages, median retention 54.4%, k=25.
+- **Why noted:** all numbers in the thesis LaTeX, the evaluation tables,
+  and the coherence sweep reports need updating once experiments settle.
+- **Revisit:** Stage 6 (methodology finalisation), after Stages 3-4
+  complete.
+
+### 31. Noise checker improved with 6-criterion allowlist
+- **Status:** ✓ RESOLVED. Script 04 noise checker updated to use 6-criterion conjunction: dictionary check, Cold War vocabulary, known_entities.yml (66 entries: 25 persons, 15 organizations, 9 places, 17 abbreviations), abbreviation regex, Spanish stopwords (31 words), and high document frequency (>=100). Previous checker over-flagged proper names and abbreviations at ~17%; new checker flags ~1.6%.
+- **Why noted:** the improvement is methodologically significant — it distinguishes real OCR noise from domain vocabulary the dictionary doesn't contain.
+- **Revisit:** resolved.
+
+### 32. Two-pass topic labelling completed for k=25
+- **Status:** ✓ RESOLVED. All 25 topics labelled. Pass 1 (top-words only) and Pass 2 (representative documents) completed. Results recorded in topic_labelling_k25.xlsx. Final tier counts after Pass 2: 6 Core, 11 Adjacent, 6 Admin, 2 Other. Key finding: 17/25 topics (68%) show Cold War relevance. Notable Pass 2 corrections: Topic 19 upgraded Other→Core (CIA assassination-planning testimony hidden behind generic conversational top-words), Topic 0 upgraded Other→Adjacent (Hampton raid forensics), Topic 6 upgraded Adjacent→Core (JMWAVE), Topic 16 downgraded Adjacent→Other (Riha witness interviews), Topic 10 downgraded Other→Admin (FBI routing templates).
+- **Why noted:** the two-pass protocol proved its value — 8 of 25 topics changed tier between Pass 1 and Pass 2.
+- **Revisit:** resolved. Results feed into thesis Chapter 5.
+
+### 33. Script 05 Cold War relevance scores for k=25
+- **Status:** ✓ RESOLVED. Cold War relevance computed using 30-term vocabulary across 5 categories. Results: 1 topic scored as Cold-War-core by the automated heuristic (Topic 24, overall=0.164), 11 as adjacent (overall 0.05–0.15), 13 as low-overall (<0.05). Manual labelling (item #32) substantially reclassified these: 6 Core and 11 Adjacent after human inspection. The gap between automated scores and manual labels confirms the vocabulary is a conservative first-pass indicator, not a classifier.
+- **Why noted:** the discrepancy between automated and manual Cold War classification is itself a finding for the Results chapter.
+- **Revisit:** resolved. Report both automated and manual scores.
 
 ---
 
