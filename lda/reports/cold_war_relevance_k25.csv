@@ -1,0 +1,26 @@
+topic_id,geopolitical,agency,tradecraft,diplomatic,named_actor,overall,matched_terms
+0,0.0,0.2,0.0,0.0,0.0,0.04,fbi (agency)
+1,0.0,0.0,0.0,0.2857,0.0,0.0571,communist (diplomatic); party (diplomatic)
+2,0.0,0.0,0.0,0.0,0.0,0.0,
+3,0.0,0.2,0.0,0.0,0.0,0.04,fbi (agency)
+4,0.2857,0.0,0.0,0.0,0.0,0.0571,cuba (geopolitical); mexico (geopolitical)
+5,0.1429,0.2,0.0,0.0,0.25,0.1186,cuba (geopolitical); fbi (agency); oswald (named_actor)
+6,0.1429,0.0,0.0,0.0,0.0,0.0286,cuba (geopolitical)
+7,0.2857,0.0,0.0,0.1429,0.0,0.0857,soviet (geopolitical); mexico (geopolitical); embassy (diplomatic)
+8,0.0,0.0,0.0,0.0,0.0,0.0,
+9,0.0,0.0,0.0,0.0,0.0,0.0,
+10,0.0,0.2,0.0,0.0,0.0,0.04,fbi (agency)
+11,0.2857,0.0,0.0,0.0,0.0,0.0571,cuba (geopolitical); mexico (geopolitical)
+12,0.1429,0.0,0.0,0.2857,0.0,0.0857,vietnam (geopolitical); communist (diplomatic); party (diplomatic)
+13,0.1429,0.2,0.0,0.1429,0.25,0.1471,soviet (geopolitical); kgb (agency); embassy (diplomatic); oswald (named_actor)
+14,0.0,0.0,0.0,0.0,0.0,0.0,
+15,0.0,0.0,0.0,0.0,0.0,0.0,
+16,0.1429,0.2,0.0,0.2857,0.0,0.1257,soviet (geopolitical); fbi (agency); communist (diplomatic); party (diplomatic)
+17,0.0,0.0,0.0,0.0,0.0,0.0,
+18,0.0,0.0,0.0,0.2857,0.0,0.0571,communist (diplomatic); party (diplomatic)
+19,0.0,0.0,0.0,0.0,0.0,0.0,
+20,0.0,0.2,0.0,0.1429,0.0,0.0686,fbi (agency); party (diplomatic)
+21,0.2857,0.0,0.0,0.1429,0.25,0.1357,cuba (geopolitical); soviet (geopolitical); communist (diplomatic); castro (named_actor)
+22,0.1429,0.0,0.0,0.0,0.0,0.0286,mexico (geopolitical)
+23,0.0,0.0,0.0,0.0,0.0,0.0,
+24,0.2857,0.0,0.1429,0.1429,0.25,0.1643,soviet (geopolitical); mexico (geopolitical); surveillance (tradecraft); embassy (diplomatic); oswald (named_actor)
