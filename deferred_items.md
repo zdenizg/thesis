@@ -19,13 +19,13 @@ Maintained by Deniz. Update or tick off as items are resolved.
   experiment. Not currently planned.
 
 ### 2. Reporting-verbs sensitivity test (`said`, `stated`, `advised`)
-- **Status:** planned as optional Stage 5 in the LDA plan.
-- **Why:** these three verbs are the most contestable items in
-  `ARCHIVE_STOPWORDS` (Phase 4). Testing whether topics improve when they
-  are retained gives a defensible answer to an obvious viva question.
-- **Revisit:** after Stages 1–4 complete and time remains. If the test
-  shows topics are better with them retained, edit
-  `pipeline/phase4/scripts/phase4_modeltext.py` and rerun the pipeline.
+- **Status:** ✓ RESOLVED. Stage 5 test completed (script 13). Retaining
+  said/stated/advised produced c_v = 0.6146 vs main pipeline c_v = 0.6128,
+  a delta of +0.0018 — within noise (threshold was 0.01). When retained,
+  the verbs appeared in the top-20 words of 5+ topics each, confirming
+  they carry no discriminative topical signal. Decision: keep current
+  stopword list. The removal is empirically validated.
+- **Revisit:** resolved. One sentence in methodology footnote or appendix.
 
 ### 3. Methodology `[X.X]` placeholders
 - **Status:** two placeholders remain in `methodology_preprocessing.md`.
@@ -246,14 +246,14 @@ suggest things that contradict already-committed choices.
 - **Revisit:** resolved. Report in Results chapter.
 
 ### 30. Post-stopword-fix corpus numbers differ from methodology text
-- **Status:** pending. Methodology currently cites 4,049 docs, 54,058
-  vocab, 78,022 retained pages, median retention 55.4%, k=23. After the
-  Phase 4 stopword fix, the correct numbers are: 4,010 docs, 54,025
-  vocab, 78,012 retained pages, median retention 54.4%, k=25.
+- **Status:** pending Stage 6 only. All experiments (Stages 1–5) are
+  complete. Final numbers: 4,010 docs, 54,025 vocab, 78,012 retained
+  pages, median retention 54.4%, k=25, c_v=0.6128. Methodology text,
+  thesis LaTeX, and evaluation tables all need updating with these numbers.
 - **Why noted:** all numbers in the thesis LaTeX, the evaluation tables,
   and the coherence sweep reports need updating once experiments settle.
-- **Revisit:** Stage 6 (methodology finalisation), after Stages 3-4
-  complete.
+- **Revisit:** Stage 6 (methodology finalisation). No more experiments
+  expected to change these numbers.
 
 ### 31. Noise checker improved with 6-criterion allowlist
 - **Status:** ✓ RESOLVED. Script 04 noise checker updated to use 6-criterion conjunction: dictionary check, Cold War vocabulary, known_entities.yml (66 entries: 25 persons, 15 organizations, 9 places, 17 abbreviations), abbreviation regex, Spanish stopwords (31 words), and high document frequency (>=100). Previous checker over-flagged proper names and abbreviations at ~17%; new checker flags ~1.6%.
@@ -269,6 +269,39 @@ suggest things that contradict already-committed choices.
 - **Status:** ✓ RESOLVED. Cold War relevance computed using 30-term vocabulary across 5 categories. Results: 1 topic scored as Cold-War-core by the automated heuristic (Topic 24, overall=0.164), 11 as adjacent (overall 0.05–0.15), 13 as low-overall (<0.05). Manual labelling (item #32) substantially reclassified these: 6 Core and 11 Adjacent after human inspection. The gap between automated scores and manual labels confirms the vocabulary is a conservative first-pass indicator, not a classifier.
 - **Why noted:** the discrepancy between automated and manual Cold War classification is itself a finding for the Results chapter.
 - **Revisit:** resolved. Report both automated and manual scores.
+
+### 34. Multi-seed robustness check for baseline comparison
+- **Status:** ✓ RESOLVED. Full pipeline beats baseline at 4/5 seeds
+  (mean delta +0.020 ± 0.025). Seed 2025 favoured the baseline by
+  0.014. The coherence advantage is directionally consistent but the
+  SD exceeds the mean, so it should not be presented as statistically
+  conclusive. Thesis framing: "evidence of improvement under the
+  selected model configuration."
+- **Why noted:** single-seed comparison was the biggest methodological
+  weakness flagged by ChatGPT review.
+- **Revisit:** resolved. Report in Results chapter with caveats.
+
+### 35. Baseline k-sweep: baseline peaks at k=10
+- **Status:** ✓ RESOLVED. Baseline coherence: k=10 (0.638), k=15
+  (0.605), k=20 (0.590), k=25 (0.564), k=30 (0.575), k=35 (0.593),
+  k=40 (0.574). Baseline's best k=10 beats full pipeline's k=25 on
+  raw coherence. However, baseline k=10 topic inspection shows merged,
+  contaminated topics (e.g., tax + assassination + committee in one
+  topic, `nw` in 6/10 topics). The preprocessing contribution is not
+  a higher coherence ceiling but the ability to sustain coherent,
+  interpretable topics at finer granularity (k=25 vs k=10).
+- **Why noted:** k=25 was optimised on the full pipeline; fairness
+  required checking the baseline's own optimal k.
+- **Revisit:** resolved. Report both numbers honestly in Results.
+
+### 36. Stage 5 reporting-verbs test completed
+- **Status:** ✓ RESOLVED. Script 13 ran Phase 4 onward with said,
+  stated, advised retained. Result: c_v = 0.6146 vs 0.6128 (delta
+  +0.0018, within noise). Verbs appeared in top-20 words of multiple
+  topics when retained. Verdict: current stopword list confirmed.
+- **Why noted:** closes the most contestable stopword decision.
+  Defensible answer to viva question.
+- **Revisit:** resolved.
 
 ---
 
