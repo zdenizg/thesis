@@ -1,0 +1,3 @@
+model,c_v,num_docs,vocab_size
+main_pipeline_k25,0.6128,,
+verbs_retained_k25,0.614612,4015,54068
